@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#123b35">
+  <title>Fila Enlonamento | Gestão de caminhões</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-mark">FE</div>
+    <div class="brand-copy">
+      <strong>Fila Enlonamento</strong>
+      <span>Gestão de atendimento de caminhões</span>
+    </div>
+    <div class="live-pill"><span class="live-dot"></span> Sistema de demonstração</div>
+  </header>
+
+  <nav class="tabs" aria-label="Áreas do sistema">
+    <button class="tab active" data-view="motorista">Motorista</button>
+    <button class="tab" data-view="operador">Painel do operador</button>
+    <button class="tab" data-view="tv">Painel da TV</button>
+    <button class="tab" data-view="historico">Histórico</button>
+  </nav>
+
+  <main class="container">
+    <section class="view active" id="view-motorista">
+      <div class="hero">
+        <div>
+          <p class="eyebrow">ACESSO DO MOTORISTA</p>
+          <h1>Entre na fila de<br><span>enlonamento.</span></h1>
+          <p class="muted">Informe a placa do caminhão para receber sua senha digital e acompanhar o atendimento.</p>
+        </div>
+        <div class="hero-icon" aria-hidden="true">↗</div>
+      </div>
+      <div class="driver-grid">
+        <form id="join-form" class="panel join-panel">
+          <div class="section-heading">
+            <div><p class="eyebrow">NOVO ATENDIMENTO</p><h2>Entrar na fila</h2></div>
+            <span class="step-badge">01</span>
+          </div>
+          <label for="plate">Placa do caminhão</label>
+          <input id="plate" name="plate" placeholder="ABC1D23" maxlength="8" autocomplete="off" required>
+          <p class="hint">Exemplo: ABC1D23 ou ABC-1234</p>
+          <button class="btn btn-primary full" type="submit">Gerar senha digital <span>→</span></button>
+          <p class="privacy-note">Ao entrar, o horário de chegada será registrado automaticamente.</p>
+          <div id="join-message" class="message" role="status" hidden></div>
+        </form>
+        <div class="panel info-panel">
+          <p class="eyebrow">COMO FUNCIONA</p>
+          <div class="how-item"><span class="how-number">1</span><div><strong>Registre sua placa</strong><p>Entre na fila pelo celular, sem instalar aplicativo.</p></div></div>
+          <div class="how-item"><span class="how-number">2</span><div><strong>Acompanhe sua posição</strong><p>Veja sua senha e o andamento da fila nesta página.</p></div></div>
+          <div class="how-item"><span class="how-number">3</span><div><strong>Aguarde o chamado</strong><p>Quando chegar sua vez, siga a orientação do operador.</p></div></div>
+          <div class="queue-summary">
+            <div><span class="summary-label">Na fila agora</span><strong id="driver-waiting-count">0</strong></div>
+            <div><span class="summary-label">Última senha</span><strong id="last-ticket">—</strong></div>
+          </div>
+        </div>
+      </div>
+      <div id="driver-ticket" class="panel ticket-panel" hidden>
+        <div class="ticket-top"><span class="status-chip" id="ticket-status">AGUARDANDO</span><span id="ticket-arrival" class="muted small"></span></div>
+        <p class="eyebrow">SUA SENHA DIGITAL</p>
+        <div class="ticket-number" id="ticket-number">E-001</div>
+        <div class="plate-display" id="ticket-plate">ABC1D23</div>
+        <div class="ticket-stats">
+          <div><span class="summary-label">Posição na fila</span><strong id="ticket-position">—</strong></div>
+          <div><span class="summary-label">Tempo de espera</span><strong id="ticket-wait">—</strong></div>
+        </div>
+        <p id="ticket-instruction" class="ticket-instruction">Aguarde. A página atualiza automaticamente enquanto estiver aberta neste dispositivo.</p>
+        <button class="btn btn-outline" id="clear-ticket" type="button">Ocultar minha senha</button>
+      </div>
+    </section>
+
+    <section class="view" id="view-operador">
+      <div class="page-heading">
+        <div><p class="eyebrow">CONTROLE OPERACIONAL</p><h1>Painel do operador</h1><p class="muted">Gerencie a fila e registre cada etapa do atendimento.</p></div>
+        <div class="date-card"><span>DATA OPERACIONAL</span><strong id="today-date">—</strong></div>
+      </div>
+      <div class="metrics">
+        <div class="metric-card"><span class="metric-icon">◷</span><span class="metric-label">Aguardando</span><strong id="metric-waiting">0</strong><small>caminhões na fila</small></div>
+        <div class="metric-card"><span class="metric-icon">↗</span><span class="metric-label">Em atendimento</span><strong id="metric-called">0</strong><small>chamados ativos</small></div>
+        <div class="metric-card"><span class="metric-icon">✓</span><span class="metric-label">Finalizados hoje</span><strong id="metric-done">0</strong><small>atendimentos concluídos</small></div>
+        <div class="metric-card"><span class="metric-icon">⌁</span><span class="metric-label">Espera média</span><strong id="metric-average">—</strong><small>até o primeiro chamado</small></div>
+      </div>
+      <div class="operator-actions">
+        <div><h2>Fila de atendimento</h2><p class="muted">Ordem automática pelo horário de chegada.</p></div>
+        <button class="btn btn-primary" id="call-next">Chamar próximo <span>→</span></button>
+      </div>
+      <div class="panel table-panel">
+        <div class="table-toolbar"><div><strong>Caminhões registrados</strong><span id="queue-subtitle">0 registros</span></div><input id="queue-search" class="search-input" placeholder="Buscar placa ou senha..." aria-label="Buscar placa ou senha"></div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Senha / Placa</th><th>Chegada</th><th>Espera</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody id="queue-body"></tbody>
+          </table>
+        </div>
+        <div id="empty-queue" class="empty-state"><span>⌕</span><strong>Nenhum caminhão na fila</strong><p>Quando um motorista se cadastrar, ele aparecerá aqui.</p></div>
+      </div>
+      <p class="demo-warning"><strong>Importante:</strong> esta demonstração salva os dados apenas neste navegador. Não use para operação real sem banco de dados, autenticação e sincronização centralizada.</p>
+    </section>
+
+    <section class="view" id="view-tv">
+      <div class="tv-screen">
+        <div class="tv-header"><div class="brand-mark">FE</div><div><strong>ENLONAMENTO</strong><span>PAINEL DE CHAMADAS</span></div><div class="tv-clock" id="tv-clock">--:--:--</div></div>
+        <div class="tv-main">
+          <p class="tv-eyebrow">DIRIJA-SE AO SETOR DE ENLONAMENTO</p>
+          <p class="tv-label">SENHA CHAMADA</p>
+          <div id="tv-ticket" class="tv-ticket">---</div>
+          <div id="tv-plate" class="tv-plate">Aguardando chamada</div>
+          <div id="tv-status" class="tv-status">Nenhum caminhão chamado no momento</div>
+        </div>
+        <div class="tv-recent">
+          <div class="tv-recent-title"><strong>ÚLTIMAS CHAMADAS</strong><span>Atualização automática</span></div>
+          <div id="tv-recent-list" class="tv-recent-list"><div class="tv-empty">As chamadas aparecerão aqui.</div></div>
+        </div>
+        <div class="tv-footer"><span>Fila Enlonamento</span><span>Por favor, acompanhe as chamadas na tela.</span></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-historico">
+      <div class="page-heading">
+        <div><p class="eyebrow">RASTREABILIDADE</p><h1>Histórico de atendimentos</h1><p class="muted">Consulte os registros e os tempos de espera da demonstração.</p></div>
+        <button class="btn btn-outline" id="export-csv">Exportar CSV ↓</button>
+      </div>
+      <div class="panel table-panel">
+        <div class="table-toolbar"><div><strong>Todos os registros</strong><span id="history-count">0 registros</span></div><input id="history-search" class="search-input" placeholder="Buscar placa ou senha..." aria-label="Buscar no histórico"></div>
+        <div class="table-scroll"><table><thead><tr><th>Senha</th><th>Placa</th><th>Chegada</th><th>Chamado</th><th>Finalizado</th><th>Status</th></tr></thead><tbody id="history-body"></tbody></table></div>
+        <div id="empty-history" class="empty-state"><span>▤</span><strong>Histórico vazio</strong><p>Os atendimentos registrados serão exibidos aqui.</p></div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer"><span>Fila Enlonamento <span class="footer-dot">•</span> Protótipo funcional</span><span>HTML · CSS · JavaScript</span></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>

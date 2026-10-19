@@ -1,0 +1,21 @@
+FILA ENLONAMENTO — PROTÓTIPO
+
+Arquivos:
+- index.html: estrutura das telas
+- style.css: aparência responsiva
+- script.js: regras e interações
+
+Como testar:
+1. Extraia o ZIP para uma pasta.
+2. Abra index.html no navegador (Chrome, Edge ou Opera).
+3. Use a aba Motorista para cadastrar uma placa.
+4. Use Painel do operador para chamar, repetir chamada, marcar ausência e finalizar.
+5. Use Painel da TV para visualizar a chamada atual e as últimas chamadas.
+6. Em Histórico, exporte os registros em CSV.
+
+Limitações importantes:
+- Os dados ficam no localStorage do navegador atual; não são enviados para um banco online.
+- As abas do mesmo navegador podem sincronizar, mas celulares e computadores diferentes não compartilham a fila.
+- Notificações push reais exigem HTTPS, service worker, permissão do usuário e um serviço/backend de push.
+- Antes de uso industrial, implemente backend e banco de dados central, autenticação do operador, logs de auditoria, política de privacidade, cópias de segurança e testes de segurança.
+- A senha sequencial reinicia se os dados locais forem apagados. Em produção, a numeração deve ser gerada no servidor.
